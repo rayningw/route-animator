@@ -74,7 +74,7 @@ var MapPanel = React.createClass({
 
     this.animationState.animatedMarker = new google.maps.Marker({
       map: this.mapState.map,
-      icon: undefined
+      icon: "images/car.png"
     });
 
     this.animationState.curCoordIdx = 0;
