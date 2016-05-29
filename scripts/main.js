@@ -1,7 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+var App = require('./app/app.js');
+
 ReactDOM.render(
-  <h1>Route Animator</h1>,
+  <App />,
   document.getElementById('content')
 );
