@@ -48,7 +48,8 @@ var App = React.createClass({
         <MapPanel onAnimateNotifier={this.onAnimateNotifier}
                   onClearNotifier={this.onClearNotifier}
                   initialLocation={this.state.initialLocation}
-                  initialZoom={this.state.initialZoom} />
+                  initialZoom={this.state.initialZoom}
+                  waypoints={this.state.waypoints} />
       </div>
     );
   }
