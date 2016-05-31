@@ -144,15 +144,25 @@ var MapPanel = React.createClass({
       center: initialLatLng,
       zoom: this.props.initialZoom,
       styles: mapStyles.defaultMapStyles,
-      // Re-position controls normally on the bottom to the top as they are cut
-      // off by the map panel overflow. See note on css.
       zoomControlOptions: {
         position: google.maps.ControlPosition.RIGHT_TOP
       },
       streetViewControlOptions: {
         position: google.maps.ControlPosition.RIGHT_TOP
+      },
+      mapTypeControlOptions: {
+        // Ensure that the toggle slide control is on the top left
+        position: google.maps.ControlPosition.TOP
       }
     });
+
+    var toggleSlideContainer = document.createElement('div');
+    toggleSlideContainer.id = "toggle-slide-container";
+    ReactDOM.render(this.props.toggleSlideoutControl, toggleSlideContainer);
+
+    google.maps.event.addListenerOnce(this.mapState.map, 'idle', function() {
+      this.mapState.map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleSlideContainer);
+    }.bind(this));
 
     this.mapState.directionsService = new google.maps.DirectionsService();
   },

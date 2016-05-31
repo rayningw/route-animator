@@ -12,8 +12,8 @@ var ControlPanel = React.createClass({
 
   render: function() {
     return (
-      <div id="panel">
-        <div id="panel-title">Route Animator</div>
+      <div id="control-panel">
+        <div id="control-panel-title">Route Animator</div>
         <button onClick={this.handleAnimate}>Animate</button>
         <button onClick={this.handleClear}>Clear</button>
       </div>

@@ -9,32 +9,24 @@ html, body, #content, #app {
   /* NOTE: Attempt to fill the remaining height with the map. We do not know the
    * height of the panel so absolute positioning cannot be used. Map controls
    * that normally appear on the bottom must be repositioned to the top. */
-  height: 100%;
+  height: 100vh;
 }
 
-#panel {
-  padding: 5px;
-  margin: auto;
-  top: 0;
-  line-height: 30px;
-  text-align: center;
-  background-color: #fff;
-  border: 1px solid #999;
+#toggle-slide-container {
+  margin: 10px;
 }
 
-#panel > * {
-  display: inline-block;
+#toggle-slide-control {
+  /* Make it look like the normal Google Maps buttons. */
+  padding: 8px;
+  border-bottom-right-radius: 2px;
+  border-top-right-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+  background-color: white;
+  border: 0;
 }
 
-#panel > *:not(:first-child) {
-  margin-left: 10px;
-}
-
-#panel form *:not(:first-child) {
-  margin-left: 10px;
-}
-
-#panel-title {
+#control-panel-title {
   font-weight: bold;
   font-size: large;
   color: #36454f;
