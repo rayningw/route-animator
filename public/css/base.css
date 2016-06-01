@@ -57,8 +57,43 @@ html, body, #content, #app {
   background-color: rgb(230, 230, 230);
 }
 
-#control-panel-title {
+#control-panel {
+  padding: 10px;
+}
+
+#control-panel > h1 {
+  text-align: center;
   font-weight: bold;
   font-size: large;
   color: #36454f;
+}
+
+#control-panel > h2 {
+  text-align: center;
+  font-weight: bold;
+  font-size: medium;
+  color: #36454f;
+}
+
+#control-panel > .divider {
+  height: 1px;
+  content: "&nbsp;";
+  background-color: rgb(230, 230, 230);
+}
+
+.waypoint-editor > input {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 4px 0;
+
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 4px 8px;
+  text-overflow: ellipsis;
+}
+
+.waypoint-editor > .waypoint-lat-lng {
+  margin-left: 10px;
+  font-size: 10px;
 }

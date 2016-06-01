@@ -32,6 +32,12 @@ var App = React.createClass({
     });
   },
 
+  handleWaypointsChange: function(changed) {
+    this.setState({
+      waypoints: changed
+    });
+  },
+
   onAnimateNotifier: {
     listeners: [],
     subscribe: function(listener) {
@@ -91,7 +97,8 @@ var App = React.createClass({
     return (
       <div id="app">
         <nav id="menu">
-          <ControlPanel />
+          <ControlPanel waypoints={this.state.waypoints}
+                        onWaypointsChange={this.handleWaypointsChange} />
         </nav>
         <main id="content-panel">
           <div id="grab-area" className={grabAreaClass}>

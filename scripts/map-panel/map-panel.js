@@ -3,16 +3,15 @@ var React = require("react"),
   T = React.PropTypes;
 var ReactDOM = require("react-dom");
 
+var latLng = require("../model/lat-lng.js");
+var waypoint = require("../model/waypoint.js");
+
 var mapStyles = require("./map-styles.js");
 var mapUtil = require("./map-util.js");
 
+// TODO(ray): Move this to the model package
 var notifierShape = T.shape({
   subscribe: T.func.isRequired
-});
-
-var latLngShape = T.shape({
-  lat: T.number.isRequired,
-  lng: T.number.isRequired
 });
 
 var MapPanel = React.createClass({
@@ -21,8 +20,8 @@ var MapPanel = React.createClass({
     animationControl: T.element.isRequired,
     onAnimateNotifier: notifierShape.isRequired,
     onClearNotifier: notifierShape.isRequired,
-    waypoints: T.arrayOf(latLngShape.isRequired).isRequired,
-    initialLocation: latLngShape.isRequired,
+    waypoints: T.arrayOf(waypoint.shape.isRequired).isRequired,
+    initialLocation: latLng.shape.isRequired,
     initialZoom: T.number.isRequired
   },
 
@@ -57,10 +56,10 @@ var MapPanel = React.createClass({
   },
 
   handleAnimate: function() {
-    console.log("Animating");
-    mapUtil.getRoute(this.mapState.directionsService, this.props.waypoints, function(err, coords) {
+    var latLngs = this.props.waypoints.map(waypoint => waypoint.location);
+    mapUtil.getRoute(this.mapState.directionsService, latLngs, function(err, coords) {
       if (err) {
-        console.log("An error occurred getting the route: " + err);
+        console.log("ERROR: An error occurred getting the route: " + err);
         return;
       }
       this.animate(coords);
@@ -70,8 +69,6 @@ var MapPanel = React.createClass({
   // TODO(ray): Factor out animation code to self-contained animation object
   // that can be kicked off, paused, cleared, etc.
   animate: function(coords) {
-    console.log("Animating number of coords: " + coords.length);
-
     this.resetAnimation(coords);
     this.nextTick();
   },
@@ -139,7 +136,6 @@ var MapPanel = React.createClass({
   },
 
   handleClear: function() {
-    console.log("Clearing");
     this.clearAnimation();
   },
 
