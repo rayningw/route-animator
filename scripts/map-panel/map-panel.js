@@ -29,19 +29,45 @@ var MapPanel = React.createClass({
     this.initializeMap();
     this.props.onAnimateNotifier.subscribe(this.handleAnimate);
     this.props.onClearNotifier.subscribe(this.handleClear);
+
+    this.renderUnmanaged();
   },
 
   render: function() {
-    // NOTE: Somehow React knows not to touch the child elements created by Google Maps JS
+    this.renderUnmanaged();
+
+    // NOTE: React does not touch the child elements created by Google Maps
     return (
-      <div id="map-canvas"></div>
+      <div id="map-canvas" ref={this.handleMapMount}></div>
     );
+  },
+
+  // Render things that are not managed by React, e.g. Google Maps.
+  // Call this after mounting and on each render.
+  renderUnmanaged: function() {
+    if (!this.mapState.map) {
+      return;
+    }
+    this.renderWaypoints();
+  },
+
+  // Clears out the old waypoint markers and renders the current ones
+  renderWaypoints: function() {
+    this.mapState.waypointMarkers.forEach(marker => marker.setMap(null));
+    this.mapState.waypointMarkers = this.props.waypoints.map(waypoint => {
+      return new google.maps.Marker({
+        map: this.mapState.map,
+        title: waypoint.name,
+        position: waypoint.location
+      });
+    });
   },
 
   // Transient state used by Google Maps
   mapState: {
     map: undefined,
-    directionsService: undefined
+    directionsService: undefined,
+    waypointMarkers: []
   },
 
   // Transient state for animation
