@@ -1,12 +1,17 @@
-var React = require('react');
+var React = require("react");
 
 var ControlPanel = React.createClass({
 
-  handleAnimate: function(event) {
+  propTypes: {
+    onAnimate: React.PropTypes.func.isRequired,
+    onClear: React.PropTypes.func.isRequired
+  },
+
+  handleAnimate: function() {
     this.props.onAnimate();
   },
 
-  handleClear: function(event) {
+  handleClear: function() {
     this.props.onClear();
   },
 

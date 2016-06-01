@@ -1,10 +1,30 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+/*global google*/
+var React = require("react"),
+  T = React.PropTypes;
+var ReactDOM = require("react-dom");
 
-var mapStyles = require('./map-styles.js');
-var mapUtil = require('./map-util.js');
+var mapStyles = require("./map-styles.js");
+var mapUtil = require("./map-util.js");
+
+var notifierShape = T.shape({
+  subscribe: T.func.isRequired
+});
+
+var latLngShape = T.shape({
+  lat: T.number.isRequired,
+  lng: T.number.isRequired
+});
 
 var MapPanel = React.createClass({
+
+  propTypes: {
+    onAnimateNotifier: notifierShape.isRequired,
+    onClearNotifier: notifierShape.isRequired,
+    waypoints: T.arrayOf(latLngShape.isRequired).isRequired,
+    initialLocation: latLngShape.isRequired,
+    initialZoom: T.number.isRequired,
+    toggleSlideoutControl: T.element.isRequired
+  },
 
   componentDidMount: function() {
     this.initializeMap();
@@ -40,7 +60,7 @@ var MapPanel = React.createClass({
     console.log("Animating");
     mapUtil.getRoute(this.mapState.directionsService, this.props.waypoints, function(err, coords) {
       if (err) {
-        console.log("An error occurred getting the route: " + err)
+        console.log("An error occurred getting the route: " + err);
         return;
       }
       this.animate(coords);
@@ -50,7 +70,7 @@ var MapPanel = React.createClass({
   // TODO(ray): Factor out animation code to self-contained animation object
   // that can be kicked off, paused, cleared, etc.
   animate: function(coords) {
-    console.log('Animating number of coords: ' + coords.length);
+    console.log("Animating number of coords: " + coords.length);
 
     this.resetAnimation(coords);
     this.nextTick();
@@ -65,7 +85,7 @@ var MapPanel = React.createClass({
     this.animationState.animatedLine = new google.maps.Polyline({
       path: [],
       geodesic: true,
-      strokeColor: '#FF6961',
+      strokeColor: "#FF6961",
       strokeOpacity: 0.8,
       strokeWeight: 5,
       editable: false,
@@ -119,7 +139,7 @@ var MapPanel = React.createClass({
   },
 
   handleClear: function() {
-    console.log("Clearing")
+    console.log("Clearing");
     this.clearAnimation();
   },
 
@@ -140,7 +160,7 @@ var MapPanel = React.createClass({
         this.props.initialLocation.lat,
         this.props.initialLocation.lng);
 
-    this.mapState.map = new google.maps.Map(document.getElementById('map-canvas'), {
+    this.mapState.map = new google.maps.Map(document.getElementById("map-canvas"), {
       center: initialLatLng,
       zoom: this.props.initialZoom,
       styles: mapStyles.defaultMapStyles,
@@ -156,16 +176,16 @@ var MapPanel = React.createClass({
       }
     });
 
-    var toggleSlideContainer = document.createElement('div');
+    var toggleSlideContainer = document.createElement("div");
     toggleSlideContainer.id = "toggle-slide-container";
     ReactDOM.render(this.props.toggleSlideoutControl, toggleSlideContainer);
 
-    google.maps.event.addListenerOnce(this.mapState.map, 'idle', function() {
+    google.maps.event.addListenerOnce(this.mapState.map, "idle", function() {
       this.mapState.map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleSlideContainer);
     }.bind(this));
 
     this.mapState.directionsService = new google.maps.DirectionsService();
-  },
+  }
 
 });
 

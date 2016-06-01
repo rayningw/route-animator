@@ -1,3 +1,4 @@
+/*global google*/
 
 function getRoute(directionsService, waypoints, callback) {
   var stopovers = waypoints.slice(1, waypoints.length-1).map(function(waypoint) {
@@ -16,12 +17,12 @@ function getRoute(directionsService, waypoints, callback) {
 
   directionsService.route(request, function(result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      console.log('Found route');
+      console.log("Found route");
       var coords = calcCoords(result.routes[0]);
       callback(null, coords);
     }
     else {
-      callback('Received status: ' + status);
+      callback("Received status: " + status);
     }
   });
 }
@@ -39,10 +40,10 @@ function calcCoords(route) {
     });
   });
 
-  console.log('Flattened route to number of co-ordinates: ' + routeCoords.length);
+  console.log("Flattened route to number of co-ordinates: " + routeCoords.length);
   return routeCoords;
 }
 
 module.exports = {
-    getRoute: getRoute
+  getRoute: getRoute
 };

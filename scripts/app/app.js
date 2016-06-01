@@ -1,9 +1,9 @@
-var React = require('react');
-var Slideout = require('../vendor/slideout/slideout-0.1.12-modified.js');
+var React = require("react");
+var Slideout = require("../vendor/slideout/slideout-0.1.12-modified.js");
 
-var defaultConfig = require('./default-config.js');
-var ControlPanel = require('../control-panel/control-panel.js');
-var MapPanel = require('../map-panel/map-panel.js');
+var defaultConfig = require("./default-config.js");
+var ControlPanel = require("../control-panel/control-panel.js");
+var MapPanel = require("../map-panel/map-panel.js");
 
 var App = React.createClass({
 
@@ -50,8 +50,8 @@ var App = React.createClass({
 
   componentDidMount: function() {
     this.slideout = this.slideout = new Slideout({
-      panel: document.getElementById('content-panel'),
-      menu: document.getElementById('menu'),
+      panel: document.getElementById("content-panel"),
+      menu: document.getElementById("menu"),
       // Size of slideout panel
       padding: 256,
       // How much flick to start toggle
