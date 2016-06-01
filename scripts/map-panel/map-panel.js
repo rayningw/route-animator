@@ -1,6 +1,7 @@
 /*global google*/
 var React = require("react"),
   T = React.PropTypes;
+var ReactDOM = require("react-dom");
 
 var mapStyles = require("./map-styles.js");
 var mapUtil = require("./map-util.js");
@@ -17,6 +18,7 @@ var latLngShape = T.shape({
 var MapPanel = React.createClass({
 
   propTypes: {
+    animationControl: T.element.isRequired,
     onAnimateNotifier: notifierShape.isRequired,
     onClearNotifier: notifierShape.isRequired,
     waypoints: T.arrayOf(latLngShape.isRequired).isRequired,
@@ -158,7 +160,7 @@ var MapPanel = React.createClass({
         this.props.initialLocation.lat,
         this.props.initialLocation.lng);
 
-    this.mapState.map = new google.maps.Map(document.getElementById("map-canvas"), {
+    var map = this.mapState.map = new google.maps.Map(document.getElementById("map-canvas"), {
       center: initialLatLng,
       zoom: this.props.initialZoom,
       styles: mapStyles.defaultMapStyles,
@@ -173,6 +175,11 @@ var MapPanel = React.createClass({
         position: google.maps.ControlPosition.TOP
       }
     });
+
+    var animationControlContainer = document.createElement("div");
+    animationControlContainer.id = "animation-control-container";
+    ReactDOM.render(this.props.animationControl, animationControlContainer);
+    map.controls[google.maps.ControlPosition.TOP].push(animationControlContainer);
 
     this.mapState.directionsService = new google.maps.DirectionsService();
   }

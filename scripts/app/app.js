@@ -80,17 +80,25 @@ var App = React.createClass({
       grabAreaClass = "";
     }
 
+    var animationControl = (
+      <div id="animation-control">
+        <button id="animate-btn" onClick={this.handleAnimate}>Animate</button>
+        <span className="divider"></span>
+        <button id="clear-btn" onClick={this.handleClear}>Clear</button>
+      </div>
+    );
+
     return (
       <div id="app">
         <nav id="menu">
-          <ControlPanel onAnimate={this.handleAnimate}
-                        onClear={this.handleClear} />
+          <ControlPanel />
         </nav>
         <main id="content-panel">
           <div id="grab-area" className={grabAreaClass}>
-            <button id="toggle-slide-control" onClick={this.toggleSlideout}>☰</button>
+            <button id="toggle-slide-btn" onClick={this.toggleSlideout}>☰</button>
           </div>
-          <MapPanel onAnimateNotifier={this.onAnimateNotifier}
+          <MapPanel animationControl={animationControl}
+                    onAnimateNotifier={this.onAnimateNotifier}
                     onClearNotifier={this.onClearNotifier}
                     initialLocation={this.state.initialLocation}
                     initialZoom={this.state.initialZoom}

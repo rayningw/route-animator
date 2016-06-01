@@ -25,16 +25,36 @@ html, body, #content, #app {
   height: 100vh;
 }
 
-#toggle-slide-control {
-  margin: 10px;
-
-  /* Make it look like the normal Google Maps buttons. */
-  padding: 8px;
+/* Make it look like the normal Google Maps control containers. */
+#toggle-slide-btn, #animation-control {
   border-bottom-right-radius: 2px;
   border-top-right-radius: 2px;
   box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
   background-color: white;
   border: 0;
+}
+
+#toggle-slide-btn {
+  margin: 10px;
+  padding: 8px;
+}
+
+#animation-control-container {
+  margin: 10px;
+}
+
+#animation-control > button {
+  padding: 8px;
+  background-color: white;
+  border: 0;
+  cursor: pointer;
+}
+
+#animation-control > .divider {
+  display: inline-block;
+  width: 1px;
+  content: "&nbsp;";
+  background-color: rgb(230, 230, 230);
 }
 
 #control-panel-title {
