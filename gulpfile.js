@@ -5,22 +5,33 @@ var babelify = require("babelify");
 var streamify = require("gulp-streamify");
 var uglify = require("gulp-uglify");
 
-// Bundle once
-gulp.task("build", function() {
-  return bundleWith(getBundler(), { uglify: false });
+var bundler = browserify({
+  entries: "./scripts/main.js",
+  debug: true
+}).transform(babelify, {presets: ["react"]});
+
+gulp.task("prod-build", function() {
+  console.log("Building for production");
+  return bundleWith(bundler, { uglify: true });
 });
 
-// Returns an unwatched bundler
-function getBundler() {
-  return browserify({
-    entries: "./scripts/main.js"
-  }).transform(babelify, {presets: ["react"]});
-}
+gulp.task("dev-build", function() {
+  console.log("Building for development");
+  return bundleWith(bundler, { uglify: false });
+});
+
+// Watch for changes in source then run build task
+gulp.task("watch", function() {
+  console.log("Watching for changes");
+  gulp.watch(["./scripts/**/*.js"], ["dev-build"]);
+});
+
+gulp.task("default", ["dev-build", "watch"]);
 
 // Bundles files with the provided bundler
 function bundleWith(bundler, opts) {
   opts = opts || {};
-  console.log("Bundling...");
+  console.log("Bundling with options:", opts);
   var b = bundler.bundle()
     .pipe(source("main.js"));
   if (opts.uglify) {

@@ -9,12 +9,12 @@ First time
 Development
 -----------
 
-1. gulp watch
+1. gulp
 2. node app.js
 
 Deployment
 ----------
 
-1. gulp build
+1. gulp prod-build
 2. Copy files from the public folder to a remote server.
 
