@@ -91,6 +91,7 @@ html, body, #content, #app {
   font-weight: 300;
   padding: 4px 8px;
   text-overflow: ellipsis;
+  border: 1px solid rgb(230, 230, 230);
 }
 
 .waypoint-editor > .waypoint-lat-lng {
