@@ -1,4 +1,5 @@
-var React = require("react");
+var React = require("react"),
+  T = React.PropTypes;
 var Slideout = require("../vendor/slideout/slideout-0.1.12-modified.js");
 
 var defaultConfig = require("./default-config.js");
@@ -6,6 +7,10 @@ var ControlPanel = require("../control-panel/control-panel.js");
 var MapPanel = require("../map-panel/map-panel.js");
 
 var App = React.createClass({
+
+  propTypes: {
+    isTouchScreen: T.func.isRequired
+  },
 
   getInitialState: function() {
     return {
@@ -49,7 +54,7 @@ var App = React.createClass({
   },
 
   componentDidMount: function() {
-    this.slideout = this.slideout = new Slideout({
+    var slideout = this.slideout = new Slideout({
       panel: document.getElementById("content-panel"),
       menu: document.getElementById("menu"),
       // Size of slideout panel
@@ -59,12 +64,21 @@ var App = React.createClass({
       // How much off the edge to start slideout
       grabWidth: 50
     });
+
+    // Render as we might need to extend/contract grab area
+    slideout.on("open", this.forceUpdate.bind(this));
+    slideout.on("close", this.forceUpdate.bind(this));
   },
 
   render: function() {
-    var toggleSlideoutControl = (
-      <button id="toggle-slide-control" onClick={this.toggleSlideout}>☰</button>
-    );
+    // Extend grab area while slideout is open to prevent map movement when the
+    // user swipes the slideout to contract it again.
+    var grabAreaClass;
+    if (this.props.isTouchScreen() && this.slideout && this.slideout.isOpen()) {
+      grabAreaClass = "grab-area-wide";
+    } else {
+      grabAreaClass = "";
+    }
 
     return (
       <div id="app">
@@ -73,14 +87,14 @@ var App = React.createClass({
                         onClear={this.handleClear} />
         </nav>
         <main id="content-panel">
-          <header>
-            <MapPanel toggleSlideoutControl={toggleSlideoutControl}
-                      onAnimateNotifier={this.onAnimateNotifier}
-                      onClearNotifier={this.onClearNotifier}
-                      initialLocation={this.state.initialLocation}
-                      initialZoom={this.state.initialZoom}
-                      waypoints={this.state.waypoints} />
-          </header>
+          <div id="grab-area" className={grabAreaClass}>
+            <button id="toggle-slide-control" onClick={this.toggleSlideout}>☰</button>
+          </div>
+          <MapPanel onAnimateNotifier={this.onAnimateNotifier}
+                    onClearNotifier={this.onClearNotifier}
+                    initialLocation={this.state.initialLocation}
+                    initialZoom={this.state.initialZoom}
+                    waypoints={this.state.waypoints} />
         </main>
       </div>
     );

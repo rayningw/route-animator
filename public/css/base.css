@@ -5,15 +5,29 @@ html, body, #content, #app {
   margin: 0;
 }
 
+/* Overlay to capture touch events in the slideout grab area to prevent map movement */
+#grab-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  /* NOTE: Must be the same as the slideout grab width */
+  width: 50px;
+  z-index: 1;
+}
+
+/* Span entire width so swiping left to close won't move the map */
+#grab-area.grab-area-wide {
+  width: 100vh;
+}
+
 #map-canvas {
   height: 100vh;
 }
 
-#toggle-slide-container {
-  margin: 10px;
-}
-
 #toggle-slide-control {
+  margin: 10px;
+
   /* Make it look like the normal Google Maps buttons. */
   padding: 8px;
   border-bottom-right-radius: 2px;

@@ -1,7 +1,6 @@
 /*global google*/
 var React = require("react"),
   T = React.PropTypes;
-var ReactDOM = require("react-dom");
 
 var mapStyles = require("./map-styles.js");
 var mapUtil = require("./map-util.js");
@@ -22,8 +21,7 @@ var MapPanel = React.createClass({
     onClearNotifier: notifierShape.isRequired,
     waypoints: T.arrayOf(latLngShape.isRequired).isRequired,
     initialLocation: latLngShape.isRequired,
-    initialZoom: T.number.isRequired,
-    toggleSlideoutControl: T.element.isRequired
+    initialZoom: T.number.isRequired
   },
 
   componentDidMount: function() {
@@ -175,14 +173,6 @@ var MapPanel = React.createClass({
         position: google.maps.ControlPosition.TOP
       }
     });
-
-    var toggleSlideContainer = document.createElement("div");
-    toggleSlideContainer.id = "toggle-slide-container";
-    ReactDOM.render(this.props.toggleSlideoutControl, toggleSlideContainer);
-
-    google.maps.event.addListenerOnce(this.mapState.map, "idle", function() {
-      this.mapState.map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleSlideContainer);
-    }.bind(this));
 
     this.mapState.directionsService = new google.maps.DirectionsService();
   }
