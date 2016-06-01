@@ -167,13 +167,8 @@ var MapPanel = React.createClass({
       zoomControlOptions: {
         position: google.maps.ControlPosition.RIGHT_TOP
       },
-      streetViewControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_TOP
-      },
-      mapTypeControlOptions: {
-        // Ensure that the toggle slide control is on the top left
-        position: google.maps.ControlPosition.TOP
-      }
+      streetViewControl: false,
+      mapTypeControl: false
     });
 
     var animationControlContainer = document.createElement("div");
