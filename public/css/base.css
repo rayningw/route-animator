@@ -81,14 +81,34 @@ html, body, #content, #app {
   background-color: rgb(230, 230, 230);
 }
 
-.insert-waypoint {
+.waypoint-row {
+  position: relative;
+}
+
+.bubble-btn {
   border-radius: 50%;
   background-color: rgb(230, 230, 230);
-  width: 14px;
-  height: 14px;
-  line-height: 14px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 16px;
   text-align: center;
+  font-family: monospace;
   cursor: pointer;
+}
+
+.bubble-btn-plus-icon {
+  content: "+";
+}
+
+.bubble-btn-minus-icon {
+  content: "-";
+  line-height: 18px;  /* Vertically aligns better for minus sign */
+}
+
+.delete-waypoint {
+  position: absolute;
+  top: 28px;
 }
 
 .waypoint-editor {
@@ -103,7 +123,7 @@ html, body, #content, #app {
   background-color: #fff;
   font-size: 14px;
   font-weight: 300;
-  padding: 4px 8px;
+  padding: 4px 8px 4px 16px;
   text-overflow: ellipsis;
   border: 1px solid rgb(230, 230, 230);
 }
