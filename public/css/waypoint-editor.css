@@ -1,0 +1,21 @@
+.waypoint-editor {
+  margin-left: 10px;
+}
+
+.waypoint-editor > input {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 4px 0;
+
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 4px 8px 4px 16px;
+  text-overflow: ellipsis;
+  border: 1px solid rgb(230, 230, 230);
+}
+
+.waypoint-editor > .waypoint-location {
+  margin-left: 10px;
+  font-size: 10px;
+}

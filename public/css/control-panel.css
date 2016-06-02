@@ -1,0 +1,53 @@
+#control-panel {
+  padding: 10px;
+}
+
+#control-panel > h1 {
+  text-align: center;
+  font-weight: bold;
+  font-size: large;
+  color: #36454f;
+}
+
+#control-panel > h2 {
+  text-align: center;
+  font-weight: bold;
+  font-size: medium;
+  color: #36454f;
+}
+
+#control-panel > .divider {
+  height: 1px;
+  content: "&nbsp;";
+  background-color: rgb(230, 230, 230);
+}
+
+.waypoint-row {
+  position: relative;
+}
+
+.bubble-btn {
+  border-radius: 50%;
+  background-color: rgb(230, 230, 230);
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 16px;
+  text-align: center;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+.bubble-btn-plus-icon {
+  content: "+";
+}
+
+.bubble-btn-minus-icon {
+  content: "-";
+  line-height: 18px;  /* Vertically aligns better for minus sign */
+}
+
+.delete-waypoint {
+  position: absolute;
+  top: 28px;
+}
