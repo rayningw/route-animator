@@ -12,6 +12,11 @@ var WaypointEditor = React.createClass({
   },
 
   initSearchBox: function(ref) {
+    // Destroying search box
+    if (!ref) {
+      return;
+    }
+
     var searchBox = new google.maps.places.SearchBox(ref);
     searchBox.addListener("places_changed", function() {
       this.handlePlacesChanged(searchBox, ref);
@@ -48,12 +53,17 @@ var WaypointEditor = React.createClass({
   },
 
   render: function() {
+    var locationText;
+    if (this.props.waypoint.location) {
+      locationText = "(" + this.props.waypoint.location.lat + ", " + this.props.waypoint.location.lng + ")";
+    } else {
+      locationText = "New waypoint";
+    }
+
     return (
       <div className="waypoint-editor">
         <input type="text" ref={this.initSearchBox} defaultValue={this.props.waypoint.name} />
-        <div className="waypoint-lat-lng">
-          ({this.props.waypoint.location.lat}, {this.props.waypoint.location.lng})
-        </div>
+        <div className="waypoint-location">{locationText}</div>
       </div>
     );
   }

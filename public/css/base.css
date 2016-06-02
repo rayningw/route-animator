@@ -81,6 +81,20 @@ html, body, #content, #app {
   background-color: rgb(230, 230, 230);
 }
 
+.insert-waypoint {
+  border-radius: 50%;
+  background-color: rgb(230, 230, 230);
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.waypoint-editor {
+  margin-left: 10px;
+}
+
 .waypoint-editor > input {
   box-sizing: border-box;
   width: 100%;
@@ -94,7 +108,7 @@ html, body, #content, #app {
   border: 1px solid rgb(230, 230, 230);
 }
 
-.waypoint-editor > .waypoint-lat-lng {
+.waypoint-editor > .waypoint-location {
   margin-left: 10px;
   font-size: 10px;
 }

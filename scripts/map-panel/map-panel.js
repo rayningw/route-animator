@@ -54,13 +54,15 @@ var MapPanel = React.createClass({
   // Clears out the old waypoint markers and renders the current ones
   renderWaypoints: function() {
     this.mapState.waypointMarkers.forEach(marker => marker.setMap(null));
-    this.mapState.waypointMarkers = this.props.waypoints.map(waypoint => {
-      return new google.maps.Marker({
-        map: this.mapState.map,
-        title: waypoint.name,
-        position: waypoint.location
+    this.mapState.waypointMarkers = this.props.waypoints
+      .filter(waypoint => waypoint.location)
+      .map(waypoint => {
+        return new google.maps.Marker({
+          map: this.mapState.map,
+          title: waypoint.name,
+          position: waypoint.location
+        });
       });
-    });
   },
 
   // Transient state used by Google Maps
@@ -82,7 +84,7 @@ var MapPanel = React.createClass({
   },
 
   handleAnimate: function() {
-    var latLngs = this.props.waypoints.map(waypoint => waypoint.location);
+    var latLngs = this.props.waypoints.filter(waypoint => waypoint.location).map(waypoint => waypoint.location);
     mapUtil.getRoute(this.mapState.directionsService, latLngs, function(err, coords) {
       if (err) {
         console.log("ERROR: An error occurred getting the route: " + err);

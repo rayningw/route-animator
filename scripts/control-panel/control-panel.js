@@ -18,14 +18,25 @@ var ControlPanel = React.createClass({
     this.props.onWaypointsChange(toBe);
   },
 
+  insertWaypoint: function(beforeIndex) {
+    var toBe = this.props.waypoints.slice();
+    toBe.splice(beforeIndex, 0, {
+      name: ""
+    });
+    this.props.onWaypointsChange(toBe);
+  },
+
   render: function() {
-    var waypoints = this.props.waypoints.map(function(waypoint, i) {
+    var waypoints = this.props.waypoints.map((waypoint, i) => {
       return (
-        <WaypointEditor key={i}
-                        waypoint={waypoint}
-                        onChange={changed => this.handleWaypointChange(changed, i)} />
+        // TODO(ray): Generate a unique key upon creation
+        <div key={waypoint.name + "-" + i}>
+          <div className="insert-waypoint" onClick={() => this.insertWaypoint(i)}>+</div>
+          <WaypointEditor waypoint={waypoint}
+                          onChange={changed => this.handleWaypointChange(changed, i)} />
+        </div>
       );
-    }.bind(this));
+    });
 
     return (
       <div id="control-panel">
