@@ -6,6 +6,7 @@ var ReactDOM = require("react-dom");
 var latLng = require("../model/lat-lng.js");
 var waypoint = require("../model/waypoint.js");
 
+var Animator = require("../animator/animator.js");
 var mapStyles = require("./map-styles.js");
 var mapUtil = require("./map-util.js");
 
@@ -29,6 +30,10 @@ var MapPanel = React.createClass({
     this.initializeMap();
     this.props.onAnimateNotifier.subscribe(this.handleAnimate);
     this.props.onClearNotifier.subscribe(this.handleClear);
+
+    this.animator = new Animator(this.renderRouteForward, 120 /* frames per second */);
+    // TODO(ray): As prop
+    this.animator.setSpeed(300);
 
     this.renderUnmanaged();
   },
@@ -73,15 +78,18 @@ var MapPanel = React.createClass({
   },
 
   // Transient state for animation
+  // TODO(ray): Wrap all of the functions that touch the animation state into
+  // its own managed object
   animationState: {
     routeCoords: undefined,
     animatedLine: undefined,
     animatedMarker: undefined,
-    timeoutId: undefined,
     curCoordIdx: undefined,
-    curTick: undefined,
-    prevRenderedTick: undefined
+    unusedTicks: undefined
   },
+
+  // Animator for the route
+  animator: undefined,
 
   handleAnimate: function() {
     var latLngs = this.props.waypoints.filter(waypoint => waypoint.location).map(waypoint => waypoint.location);
@@ -94,88 +102,74 @@ var MapPanel = React.createClass({
     }.bind(this));
   },
 
-  // TODO(ray): Factor out animation code to self-contained animation object
-  // that can be kicked off, paused, cleared, etc.
   animate: function(coords) {
-    this.resetAnimation(coords);
-    this.nextTick();
+    this.clearAnimation(this.animationState);
+    this.animationState = this.newAnimationState(coords);
+    this.animator.start(this.animationState);
   },
 
-  resetAnimation: function(routeCoords) {
-    this.clearAnimation();
-
-    // TODO(ray): Factor this out into a newAnimationState(map, coords) func
-    this.animationState.routeCoords = routeCoords;
-
-    this.animationState.animatedLine = new google.maps.Polyline({
-      path: [],
-      geodesic: true,
-      strokeColor: "#FF6961",
-      strokeOpacity: 0.8,
-      strokeWeight: 5,
-      editable: false,
-      map: this.mapState.map
-    });
-
-    this.animationState.animatedMarker = new google.maps.Marker({
-      map: this.mapState.map,
-      icon: "images/car.png"
-    });
-
-    this.animationState.curCoordIdx = 0;
-    this.animationState.curTick = 0;
-    this.animationState.prevRenderedTick = 0;
+  newAnimationState: function(routeCoords) {
+    return {
+      routeCoords: routeCoords,
+      animatedLine: new google.maps.Polyline({
+        path: [],
+        geodesic: true,
+        strokeColor: "#FF6961",
+        strokeOpacity: 0.8,
+        strokeWeight: 5,
+        editable: false,
+        map: this.mapState.map
+      }),
+      animatedMarker: new google.maps.Marker({
+        map: this.mapState.map,
+        icon: "images/car.png"
+      }),
+      curCoordIdx: 0,
+      unusedTicks: 0
+    };
   },
 
-  nextTick: function() {
-    // TODO(ray): Factor out into configuration
-    var speed = 100;
-    var fps = 60;
+  renderRouteForward: function(ticks) {
+    this.animationState.unusedTicks += ticks;
 
-    var prevCoord = this.animationState.routeCoords[this.animationState.curCoordIdx];
-    var coord = this.animationState.routeCoords[++this.animationState.curCoordIdx];
+    // Consume as many ticks as we can to render paths between co-ords
+    for (;;) {
+      // End of animation
+      if (this.animationState.curCoordIdx >= this.animationState.routeCoords.length-1) {
+        return true;  // Indicate end
+      }
 
-    // End of animation
-    if (this.animationState.curCoordIdx >= this.animationState.routeCoords.length - 1) {
-      this.renderTick(coord);
-      return;
+      // Calculate the distance between the current and next co-ord
+      var curCoord = this.animationState.routeCoords[this.animationState.curCoordIdx];
+      var nextCoord = this.animationState.routeCoords[this.animationState.curCoordIdx+1];
+      var distance = google.maps.geometry.spherical.computeDistanceBetween(curCoord, nextCoord);
+
+      // Break if we do not have enough ticks
+      if (this.animationState.unusedTicks < distance) {
+        break;
+      }
+
+      // Render co-ordinate and consume ticks
+      this.animationState.animatedLine.getPath().push(nextCoord);
+      this.animationState.animatedMarker.setPosition(nextCoord);
+      this.animationState.unusedTicks -= distance;
+
+      // Prepare for next co-ordinate
+      this.animationState.curCoordIdx++;
     }
-
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(prevCoord, coord);
-    var tickIncrement = distance / speed;
-    this.animationState.curTick += tickIncrement;
-
-    var ticksPerRender = 1000 / fps;
-    if (this.animationState.curTick > this.animationState.prevRenderedTick + ticksPerRender) {
-      this.animationState.timeoutId = setTimeout(function() {
-        this.renderTick(coord);
-        this.nextTick();
-      }.bind(this), tickIncrement);
-    }
-    else {
-      this.nextTick();
-    }
-  },
-
-  renderTick: function(coord) {
-    this.animationState.animatedLine.getPath().push(coord);
-    this.animationState.animatedMarker.setPosition(coord);
-    this.animationState.prevRenderedTick = this.animationState.curTick;
   },
 
   handleClear: function() {
-    this.clearAnimation();
+    this.clearAnimation(this.animationState);
   },
 
-  clearAnimation: function() {
-    if (this.animationState.animatedLine) {
-      this.animationState.animatedLine.setMap(null);
+  clearAnimation: function(animationState) {
+    this.animator.stop();
+    if (animationState.animatedLine) {
+      animationState.animatedLine.setMap(null);
     }
-    if (this.animationState.animatedMarker) {
-      this.animationState.animatedMarker.setMap(null);
-    }
-    if (this.animationState.timeoutId) {
-      clearTimeout(this.animationState.timeoutId);
+    if (animationState.animatedMarker) {
+      animationState.animatedMarker.setMap(null);
     }
   },
 
