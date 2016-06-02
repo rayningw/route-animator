@@ -16,7 +16,8 @@ var App = React.createClass({
     return {
       initialLocation: defaultConfig.initialLocation,
       initialZoom: defaultConfig.initialZoom,
-      waypoints: defaultConfig.waypoints
+      waypoints: defaultConfig.waypoints,
+      animationSpeed: defaultConfig.animationSpeed
     };
   },
 
@@ -59,6 +60,13 @@ var App = React.createClass({
     this.slideout.toggle();
   },
 
+  handleAnimationSpeedChange: function(speed) {
+    speed = speed || 0;
+    this.setState({
+      animationSpeed: speed
+    });
+  },
+
   componentDidMount: function() {
     var slideout = this.slideout = new Slideout({
       panel: document.getElementById("content-panel"),
@@ -98,7 +106,9 @@ var App = React.createClass({
       <div id="app">
         <nav id="menu">
           <ControlPanel waypoints={this.state.waypoints}
-                        onWaypointsChange={this.handleWaypointsChange} />
+                        onWaypointsChange={this.handleWaypointsChange}
+                        animationSpeed={this.state.animationSpeed}
+                        onAnimationSpeedChange={this.handleAnimationSpeedChange} />
         </nav>
         <main id="content-panel">
           <div id="grab-area" className={grabAreaClass}>
@@ -109,7 +119,8 @@ var App = React.createClass({
                     onClearNotifier={this.onClearNotifier}
                     initialLocation={this.state.initialLocation}
                     initialZoom={this.state.initialZoom}
-                    waypoints={this.state.waypoints} />
+                    waypoints={this.state.waypoints}
+                    animationSpeed={this.state.animationSpeed} />
         </main>
       </div>
     );

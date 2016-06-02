@@ -9,7 +9,9 @@ var ControlPanel = React.createClass({
 
   propTypes: {
     waypoints: T.arrayOf(waypoint.shape.isRequired).isRequired,
-    onWaypointsChange: T.func.isRequired
+    onWaypointsChange: T.func.isRequired,
+    animationSpeed: T.number.isRequired,
+    onAnimationSpeedChange: T.func.isRequired
   },
 
   handleWaypointChange: function(changed, index) {
@@ -48,6 +50,11 @@ var ControlPanel = React.createClass({
     return (
       <div id="control-panel">
         <h1>Route Animator</h1>
+        <div className="divider" />
+        <h3>Animation Speed (km/s)</h3>
+        <input type="number"
+               defaultValue={this.props.animationSpeed}
+               onChange={(e) => this.props.onAnimationSpeedChange(e.target.value ? parseInt(e.target.value) : null)} />
         <div className="divider" />
         <h2>Waypoints</h2>
         {waypoints}

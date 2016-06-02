@@ -15,6 +15,12 @@ var waypoints = [ rockridge, sparks, denver, spaceMuseum, kansasCity, stLouis, l
 var initialLocation = {lat: 37.6, lng: -95.665};
 var initialZoom = 4;
 
-exports.initialZoom = initialZoom;
-exports.initialLocation = initialLocation;
-exports.waypoints = waypoints;
+// Meters per milliseconds or kilometers per second
+var animationSpeed = 300;
+
+module.exports = {
+  initialZoom: initialZoom,
+  initialLocation: initialLocation,
+  waypoints: waypoints,
+  animationSpeed: animationSpeed
+};

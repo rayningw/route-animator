@@ -23,7 +23,9 @@ var MapPanel = React.createClass({
     onClearNotifier: notifierShape.isRequired,
     waypoints: T.arrayOf(waypoint.shape.isRequired).isRequired,
     initialLocation: latLng.shape.isRequired,
-    initialZoom: T.number.isRequired
+    initialZoom: T.number.isRequired,
+    // Animation speed as km/s
+    animationSpeed: T.number.isRequired
   },
 
   componentDidMount: function() {
@@ -32,8 +34,6 @@ var MapPanel = React.createClass({
     this.props.onClearNotifier.subscribe(this.handleClear);
 
     this.animator = new Animator(this.renderRouteForward, 120 /* frames per second */);
-    // TODO(ray): As prop
-    this.animator.setSpeed(300);
 
     this.renderUnmanaged();
   },
@@ -53,6 +53,8 @@ var MapPanel = React.createClass({
     if (!this.mapState.map) {
       return;
     }
+    // We want each tick to represent a meter
+    this.animator.setSpeed(this.props.animationSpeed);
     this.renderWaypoints();
   },
 
@@ -139,7 +141,7 @@ var MapPanel = React.createClass({
         return true;  // Indicate end
       }
 
-      // Calculate the distance between the current and next co-ord
+      // Calculate the distance in meters between the current and next co-ord
       var curCoord = this.animationState.routeCoords[this.animationState.curCoordIdx];
       var nextCoord = this.animationState.routeCoords[this.animationState.curCoordIdx+1];
       var distance = google.maps.geometry.spherical.computeDistanceBetween(curCoord, nextCoord);

@@ -16,10 +16,31 @@
   color: #36454f;
 }
 
+#control-panel > h3 {
+  text-align: center;
+  font-weight: bold;
+  font-size: small;
+  color: #36454f;
+}
+
 #control-panel > .divider {
+  margin: 8px 0;
   height: 1px;
   content: "&nbsp;";
   background-color: rgb(230, 230, 230);
+}
+
+#control-panel input {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 4px 0;
+
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 4px 8px 4px 16px;
+  text-overflow: ellipsis;
+  border: 1px solid rgb(230, 230, 230);
 }
 
 .waypoint-row {
