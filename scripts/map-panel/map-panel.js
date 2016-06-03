@@ -128,6 +128,7 @@ var MapPanel = React.createClass({
     mapUtil.getRoute(this.mapState.directionsService, latLngs, function(err, coords) {
       if (err) {
         console.log("ERROR: An error occurred getting the route: " + err);
+        window.alert("Sorry, an error occurred getting the route: " + err);
         return;
       }
       this.animate(coords);
