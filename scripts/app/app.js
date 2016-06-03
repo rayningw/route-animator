@@ -6,6 +6,8 @@ var defaultConfig = require("./default-config.js");
 var ControlPanel = require("../control-panel/control-panel.js");
 var MapPanel = require("../map-panel/map-panel.js");
 
+var Notifier = require("../model/notifier.js").Notifier;
+
 var App = React.createClass({
 
   propTypes: {
@@ -21,36 +23,27 @@ var App = React.createClass({
     };
   },
 
+  onAnimateNotifier: new Notifier(),
+  onClearNotifier: new Notifier(),
+  onFitWaypointsNotifier: new Notifier(),
+
   handleAnimate: function() {
-    this.onAnimateNotifier.listeners.forEach(function(listener) {
-      listener();
-    });
+    this.onAnimateNotifier.notify();
   },
 
   handleClear: function() {
-    this.onClearNotifier.listeners.forEach(function(listener) {
-      listener();
-    });
+    this.onClearNotifier.notify();
+  },
+
+  handleFitWaypoints: function() {
+    this.onFitWaypointsNotifier.notify();
   },
 
   handleWaypointsChange: function(changed) {
     this.setState({
       waypoints: changed
     });
-  },
-
-  onAnimateNotifier: {
-    listeners: [],
-    subscribe: function(listener) {
-      this.listeners.push(listener);
-    }
-  },
-
-  onClearNotifier: {
-    listeners: [],
-    subscribe: function(listener) {
-      this.listeners.push(listener);
-    }
+    this.onFitWaypointsNotifier.notify();
   },
 
   // Slideout handle object constructed after component mount
@@ -95,10 +88,10 @@ var App = React.createClass({
     }
 
     var animationControl = (
-      <div id="animation-control">
-        <button id="animate-btn" onClick={this.handleAnimate}>Animate</button>
+      <div id="animation-control" className="map-control">
+        <button onClick={this.handleAnimate}>Animate</button>
         <span className="divider"></span>
-        <button id="clear-btn" onClick={this.handleClear}>Clear</button>
+        <button onClick={this.handleClear}>Clear</button>
       </div>
     );
 
@@ -112,11 +105,12 @@ var App = React.createClass({
         </nav>
         <main id="content-panel">
           <div id="grab-area" className={grabAreaClass}>
-            <button id="toggle-slide-btn" onClick={this.toggleSlideout}>☰</button>
+            <button id="toggle-slide-btn" className="map-control" onClick={this.toggleSlideout}>☰</button>
           </div>
           <MapPanel animationControl={animationControl}
                     onAnimateNotifier={this.onAnimateNotifier}
                     onClearNotifier={this.onClearNotifier}
+                    onFitWaypointsNotifier={this.onFitWaypointsNotifier}
                     initialLocation={this.state.initialLocation}
                     initialZoom={this.state.initialZoom}
                     waypoints={this.state.waypoints}

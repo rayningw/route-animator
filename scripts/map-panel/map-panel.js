@@ -2,25 +2,23 @@
 var React = require("react"),
   T = React.PropTypes;
 var ReactDOM = require("react-dom");
+var _ = require("lodash");
 
 var latLng = require("../model/lat-lng.js");
 var waypoint = require("../model/waypoint.js");
+var notifier = require("../model/notifier.js");
 
 var Animator = require("../animator/animator.js");
 var mapStyles = require("./map-styles.js");
 var mapUtil = require("./map-util.js");
 
-// TODO(ray): Move this to the model package
-var notifierShape = T.shape({
-  subscribe: T.func.isRequired
-});
-
 var MapPanel = React.createClass({
 
   propTypes: {
     animationControl: T.element.isRequired,
-    onAnimateNotifier: notifierShape.isRequired,
-    onClearNotifier: notifierShape.isRequired,
+    onAnimateNotifier: notifier.shape.isRequired,
+    onClearNotifier: notifier.shape.isRequired,
+    onFitWaypointsNotifier: notifier.shape.isRequired,
     waypoints: T.arrayOf(waypoint.shape.isRequired).isRequired,
     initialLocation: latLng.shape.isRequired,
     initialZoom: T.number.isRequired,
@@ -32,6 +30,7 @@ var MapPanel = React.createClass({
     this.initializeMap();
     this.props.onAnimateNotifier.subscribe(this.handleAnimate);
     this.props.onClearNotifier.subscribe(this.handleClear);
+    this.props.onFitWaypointsNotifier.subscribe(() => this.fitWaypoints(false /* do not contract */));
 
     this.animator = new Animator(this.renderRouteForward, 120 /* frames per second */);
 
@@ -70,6 +69,37 @@ var MapPanel = React.createClass({
           position: waypoint.location
         });
       });
+  },
+
+  // Adjusts the map so it bounds the waypoints, optionally contracting to fit
+  // the waypoints snugly
+  fitWaypoints: function(shouldContract) {
+    if (this.props.waypoints.length == 0) {
+      return;
+    }
+
+    var bounds = _.reduce(this.props.waypoints, (acc, waypoint) => {
+      return acc.extend(new google.maps.LatLng(waypoint.location));
+    }, new google.maps.LatLngBounds());
+
+    // Fit bounds if either we should contract or if any of the waypoints fall
+    // outside of the current map bounds
+    if (shouldContract) {
+      this.mapState.map.fitBounds(bounds);
+    } else {
+      var mapBounds = this.mapState.map.getBounds();
+      if (mapBounds && !this.boundContains(mapBounds, bounds)) {
+        this.mapState.map.fitBounds(bounds);
+      }
+    }
+  },
+
+  // Returns whether the outside bound completely contains the inside bound
+  boundContains: function(outside, inside) {
+    // Make a copy to mutate
+    var union = new google.maps.LatLngBounds(outside.getSouthWest(), outside.getNorthEast());
+    union.union(inside);
+    return outside.equals(union);
   },
 
   // Transient state used by Google Maps
@@ -191,10 +221,22 @@ var MapPanel = React.createClass({
       mapTypeControl: false
     });
 
+    // Add passed-in animation control
     var animationControlContainer = document.createElement("div");
     animationControlContainer.id = "animation-control-container";
     ReactDOM.render(this.props.animationControl, animationControlContainer);
     map.controls[google.maps.ControlPosition.TOP].push(animationControlContainer);
+
+    // Add fit waypoints control
+    var fitWaypointsControlContainer = document.createElement("div");
+    fitWaypointsControlContainer.id = "fit-waypoints-control-container";
+    var fitWaypointsControl = (
+      <div id="fit-waypoints-control" className="map-control">
+        <button onClick={() => this.fitWaypoints(true /* contract */)}>Fit Waypoints</button>
+      </div>
+    );
+    ReactDOM.render(fitWaypointsControl, fitWaypointsControlContainer);
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(fitWaypointsControlContainer);
 
     this.mapState.directionsService = new google.maps.DirectionsService();
   }

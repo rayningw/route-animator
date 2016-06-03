@@ -22,12 +22,26 @@
 }
 
 /* Make it look like the normal Google Maps control containers. */
-#toggle-slide-btn, #animation-control {
+.map-control {
   border-bottom-right-radius: 2px;
   border-top-right-radius: 2px;
   box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
   background-color: white;
   border: 0;
+}
+
+.map-control > button {
+  padding: 8px;
+  background-color: white;
+  border: 0;
+  cursor: pointer;
+}
+
+.map-control > .divider {
+  display: inline-block;
+  width: 1px;
+  content: "&nbsp;";
+  background-color: rgb(230, 230, 230);
 }
 
 #toggle-slide-btn {
@@ -39,16 +53,6 @@
   margin: 10px;
 }
 
-#animation-control > button {
-  padding: 8px;
-  background-color: white;
-  border: 0;
-  cursor: pointer;
-}
-
-#animation-control > .divider {
-  display: inline-block;
-  width: 1px;
-  content: "&nbsp;";
-  background-color: rgb(230, 230, 230);
+#fit-waypoints-control-container {
+  margin: 10px;
 }
