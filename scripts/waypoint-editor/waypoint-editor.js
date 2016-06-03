@@ -62,7 +62,10 @@ var WaypointEditor = React.createClass({
 
     return (
       <div className="waypoint-editor">
-        <input type="text" ref={this.initSearchBox} defaultValue={this.props.waypoint.name} />
+        <input type="text"
+               ref={this.initSearchBox}
+               defaultValue={this.props.waypoint.name}
+               placeholder="Search for a place" />
         <div className="waypoint-location">{locationText}</div>
       </div>
     );
