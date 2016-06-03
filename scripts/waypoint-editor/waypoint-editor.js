@@ -4,6 +4,10 @@ var React = require("react"),
 
 var waypoint = require("../model/waypoint.js");
 
+// Precision up to 11m, good enough:
+// http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude
+var LAT_LNG_PRECISION = 4;
+
 var WaypointEditor = React.createClass({
 
   propTypes: {
@@ -55,7 +59,8 @@ var WaypointEditor = React.createClass({
   render: function() {
     var locationText;
     if (this.props.waypoint.location) {
-      locationText = "(" + this.props.waypoint.location.lat + ", " + this.props.waypoint.location.lng + ")";
+      locationText = "(" + this.props.waypoint.location.lat.toFixed(LAT_LNG_PRECISION) +
+                     ", " + this.props.waypoint.location.lng.toFixed(LAT_LNG_PRECISION) + ")";
     } else {
       locationText = "New waypoint";
     }
