@@ -58,6 +58,10 @@ var ControlPanel = React.createClass({
         <div className="divider" />
         <h2>Waypoints</h2>
         {waypoints}
+        <div className="waypoint-row">
+          <div className="bubble-btn bubble-btn-plus-icon"
+               onClick={() => this.insertWaypoint(this.props.waypoints.length)}>+</div>
+        </div>
       </div>
     );
   }
