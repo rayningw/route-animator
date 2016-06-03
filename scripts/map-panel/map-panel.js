@@ -222,6 +222,9 @@ var MapPanel = React.createClass({
       mapTypeControl: false
     });
 
+    // Fit initial waypoints
+    google.maps.event.addListenerOnce(map, "idle", () => this.fitWaypoints(true /* contract */));
+
     // Add passed-in animation control
     var animationControlContainer = document.createElement("div");
     animationControlContainer.id = "animation-control-container";
