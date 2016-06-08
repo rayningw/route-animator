@@ -1,0 +1,15 @@
+/* Overlay to capture touch events in the slideout grab area to prevent map movement */
+#grab-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  /* NOTE: Must be the same as the slideout grab width */
+  width: 50px;
+  z-index: 1;
+}
+
+/* Span entire width so swiping left to close won't move the map */
+#grab-area.grab-area-wide {
+  width: 100vh;
+}
