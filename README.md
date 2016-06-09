@@ -5,6 +5,7 @@ First time
 ----------
 
 1. npm install
+2. ln -s <path-to-charm-libs> node_modules/charm
 
 Development
 -----------
