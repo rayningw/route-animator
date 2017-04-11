@@ -95,6 +95,7 @@ var App = React.createClass({
         <Slideout isTouchScreen={this.props.isTouchScreen}
                   content={content}
                   menu={menu}
+                  captureGrabArea={true}
                   subscribeToToggle={this.onToggleNotifier.subscribe.bind(this.onToggleNotifier)} />
       </div>
     );

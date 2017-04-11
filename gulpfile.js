@@ -1,7 +1,8 @@
-var browserify = require("browserify");
 var gulp = require("gulp");
 var gutil = require("gulp-util");
 var source = require("vinyl-source-stream");
+var browserify = require("browserify");
+var browserifyCss = require("browserify-css");
 var babelify = require("babelify");
 var streamify = require("gulp-streamify");
 var uglify = require("gulp-uglify");
@@ -24,6 +25,7 @@ var appBundler = browserify({
   entries: "./scripts/main.js",
   debug: true
 })
+.transform(browserifyCss)
 .transform(babelify, { presets: [ "react", "es2015" ] })
 .external(vendors);
 
